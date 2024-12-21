@@ -1,3 +1,4 @@
+import 'package:club_app/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -38,173 +39,166 @@ part 'router.g.dart';
 // calendarEventDetails: "/home/calendar/:eventId"
 // calendarDate: "/home/calendar/:date"
 
-@TypedGoRoute<ClubRoute>(path: '/', routes: [
-  TypedGoRoute<MainAppHomeTabsRoute>(path: '/home', routes: [
-    // المسار الرئيسي للتطبيق مع التبويبات الرئيسية
-    TypedGoRoute<ClubHomeTabsViewRoute>(path: 'ClubHomeTabsView?id=:clubId', routes: [
-      // المسار الخاص بالمجموعات الداخلية للنادي
-      TypedGoRoute<ClubInternalGroupsPageViewRoute>(path: 'ClubInternalGroupsPageView', routes: [
-        // المسار الخاص بالغرف داخل المجموعة
-        TypedGoRoute<GroupRoomsScreenRoute>(path: 'GroupRoomsScreen?id=:groupId', routes: [
-          // المسار الخاص بالدردشة داخل الغرفة
-          TypedGoRoute<ChatScreenRoute>(path: 'ChatScreen?id=:roomId'),
-        ]),
-      ]),
-    ]),
-  ]),
-])
+@TypedGoRoute<SplashRoute>(path: '/')
 // تعريفات الدوال المرتبطة بكل مسار
-class ClubRoute extends GoRouteData {
+class SplashRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) => const SplashScreen();
 }
 
-class MainAppHomeTabsRoute extends GoRouteData {
+@TypedGoRoute<HomeRoute>(path: '/home', routes: [
+  TypedGoRoute<ClubRoute>(path: 'club', routes: [
+    TypedGoRoute<ClubDetailsRoute>(path: ':clubId', routes: [
+      TypedGoRoute<ClubMembersRoute>(path: '/members'),
+      TypedGoRoute<ClubGroupsRoute>(path: '/groups', routes: [
+        TypedGoRoute<ClubGroupMembersRoute>(path: ':groupId'),
+        // TypedGoRoute<ClubGroupMembersRoute>(path: ':groupId/members'),
+        // TypedGoRoute<ClubGroupRoomsRoute>(path: ':groupId/rooms', routes: [
+        //   TypedGoRoute<ClubGroupRoomChatRoute>(path: 'chat/:roomId'),
+        // ]),
+      ]),
+    ]),
+  ]),
+  TypedGoRoute<ChatsRoute>(path: 'chats', routes: [
+    TypedGoRoute<ChatDetailsRoute>(path: ':chatId'),
+  ]),
+  TypedGoRoute<TasksRoute>(path: 'tasks', routes: [
+    TypedGoRoute<TaskDetailsRoute>(path: ':taskId'),
+  ]),
+  TypedGoRoute<NewsRoute>(path: 'news', routes: [
+    TypedGoRoute<NewsDetailsRoute>(path: ':newsId'),
+  ]),
+  TypedGoRoute<ActivitiesRoute>(path: 'activities', routes: [
+    TypedGoRoute<ActivityDetailsRoute>(path: ':activityId'),
+  ]),
+  TypedGoRoute<CalendarRoute>(path: 'calendar', routes: [
+    TypedGoRoute<CalendarEventDetailsRoute>(path: ':eventId'),
+    TypedGoRoute<CalendarDateRoute>(path: ':date'),
+  ]),
+])
+class HomeRoute extends GoRouteData {
   final int index;
-  MainAppHomeTabsRoute({this.index = 0});
-
+  HomeRoute({this.index = 0});
   @override
-  Widget build(BuildContext context, GoRouterState state) => MainAppHomeTabs(index: index);
+  Widget build(BuildContext context, GoRouterState state) => HomeScreen(indexTab: index);
 }
 
-class ClubHomeTabsViewRoute extends GoRouteData {
-  final String clubId;
-  ClubHomeTabsViewRoute({required this.clubId});
-
+class ClubRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context, GoRouterState state) => const ClubHomeTabsView();
+  Widget build(BuildContext context, GoRouterState state) => const ClubsScreen();
 }
 
-class ClubInternalGroupsPageViewRoute extends GoRouteData {
+class ClubDetailsRoute extends GoRouteData {
   final String clubId;
-  ClubInternalGroupsPageViewRoute({required this.clubId});
+  ClubDetailsRoute({required this.clubId});
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const ClubInternalGroupsPageView();
+  Widget build(BuildContext context, GoRouterState state) => ClubDetailsScreen(clubId: clubId);
 }
 
-class GroupRoomsScreenRoute extends GoRouteData {
-  final String clubId;
+class ClubMembersRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const ClubMembersScreen();
+}
+
+class ClubGroupsRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const ClubGroupsScreen();
+}
+
+class ClubGroupMembersRoute extends GoRouteData {
   final String groupId;
-  GroupRoomsScreenRoute({required this.clubId, required this.groupId});
+  ClubGroupMembersRoute({required this.groupId});
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const GroupChatRoomsListScreen();
+  Widget build(BuildContext context, GoRouterState state) => ClubGroupMembersScreen(groupId: groupId);
 }
 
-class ChatScreenRoute extends GoRouteData {
-  final String clubId;
+class ClubGroupRoomsRoute extends GoRouteData {
   final String groupId;
+  ClubGroupRoomsRoute({required this.groupId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => ClubGroupRoomsScreen(groupId: groupId);
+}
+
+class ClubGroupRoomChatRoute extends GoRouteData {
   final String roomId;
-  ChatScreenRoute({required this.clubId, required this.groupId, required this.roomId});
+  ClubGroupRoomChatRoute({required this.roomId});
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const ChatScreenView();
+  Widget build(BuildContext context, GoRouterState state) => ChatScreen(roomId: roomId);
 }
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
-
+class ChatsRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Splash Screen'),
-      ),
-    );
-  }
+  Widget build(BuildContext context, GoRouterState state) => const ChatsScreen();
 }
 
-class MainAppHomeTabs extends StatelessWidget {
-  static ValueNotifier<int> initialIndex = ValueNotifier<int>(0);
-  MainAppHomeTabs({
-    Key? key,
-    int index = 0,
-  }) : super(key: key) {
-    initialIndex.value = index;
-  }
+class ChatDetailsRoute extends GoRouteData {
+  final String chatId;
+  ChatDetailsRoute({required this.chatId});
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: initialIndex,
-        builder: (context, value, child) {
-          return DefaultTabController(
-            initialIndex: value,
-            length: 4,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text('Main App Home Tabs'),
-              ),
-              body: Center(
-                child: Text('Main App Home Tabs Content'),
-              ),
-            ),
-          );
-        });
-  }
+  Widget build(BuildContext context, GoRouterState state) => ChatDetailsScreen(chatId: chatId);
 }
 
-class ClubHomeTabsView extends StatelessWidget {
-  const ClubHomeTabsView({Key? key}) : super(key: key);
-
+class TasksRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Club Home Tabs View'),
-      ),
-      body: Center(
-        child: Text('Club Home Tabs View Content'),
-      ),
-    );
-  }
+  Widget build(BuildContext context, GoRouterState state) => const TasksScreen();
 }
 
-class ClubInternalGroupsPageView extends StatelessWidget {
-  const ClubInternalGroupsPageView({Key? key}) : super(key: key);
+class TaskDetailsRoute extends GoRouteData {
+  final String taskId;
+  TaskDetailsRoute({required this.taskId});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Club Internal Groups Page View'),
-      ),
-      body: Center(
-        child: Text('Club Internal Groups Page View Content'),
-      ),
-    );
-  }
+  Widget build(BuildContext context, GoRouterState state) => TaskDetailsScreen(taskId: taskId);
 }
 
-class GroupChatRoomsListScreen extends StatelessWidget {
-  const GroupChatRoomsListScreen({Key? key}) : super(key: key);
-
+class NewsRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Group Chat Rooms List Screen'),
-      ),
-      body: Center(
-        child: Text('Group Chat Rooms List Screen Content'),
-      ),
-    );
-  }
+  Widget build(BuildContext context, GoRouterState state) => const NewsScreen();
 }
 
-class ChatScreenView extends StatelessWidget {
-  const ChatScreenView({Key? key}) : super(key: key);
+class NewsDetailsRoute extends GoRouteData {
+  final String newsId;
+  NewsDetailsRoute({required this.newsId});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat Screen View'),
-      ),
-      body: Center(
-        child: Text('Chat Screen View Content'),
-      ),
-    );
-  }
+  Widget build(BuildContext context, GoRouterState state) => NewsDetailsScreen(newsId: newsId);
+}
+
+class ActivitiesRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const ActivitiesScreen();
+}
+
+class ActivityDetailsRoute extends GoRouteData {
+  final String activityId;
+  ActivityDetailsRoute({required this.activityId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => ActivityDetailsScreen(activityId: activityId);
+}
+
+class CalendarRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const CalendarScreen();
+}
+
+class CalendarEventDetailsRoute extends GoRouteData {
+  final String eventId;
+  CalendarEventDetailsRoute({required this.eventId});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => CalendarEventDetailsScreen(eventId: eventId);
+}
+
+class CalendarDateRoute extends GoRouteData {
+  final String date;
+  CalendarDateRoute({required this.date});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => CalendarDateScreen(date: date);
 }

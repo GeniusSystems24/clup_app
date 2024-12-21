@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
-
 final routerConfig = GoRouter(
   navigatorKey: rootNavigatorKey,
-  initialLocation: "/",
+  initialLocation: HomeRoute(index: 2).location,
   routes: $appRoutes,
   debugLogDiagnostics: true,
 );
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {

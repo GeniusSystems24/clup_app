@@ -1,5 +1,8 @@
+<!-- http://localhost:6222/#/home -->
+<!-- http://localhost:6222/#/home?index=1 -->
+<!-- http://localhost:6222/#/home?index=2 -->
+<!-- http://localhost:6222/#/home?index=3 -->
 # club_app
-
 A new Flutter project.
 
 ## Description
