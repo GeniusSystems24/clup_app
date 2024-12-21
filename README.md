@@ -10,11 +10,11 @@ The `club_app` is a Flutter application designed to manage and interact with var
 
 ## Routes
 
-### Main Routes
+### Main Routes الواجهة الئيسية وملحقاتها
 - **Start:** `/`
 - **Home:** `/home`
 
-### Clubs and Related Features
+### Clubs and Related Features الاندية و ملحقاتها
 - **Clubs:** `/home/club`
 - **Club Details:** `/home/club/:clubId`
 - **Club Members:** `/home/club/:clubId/members`
@@ -23,23 +23,23 @@ The `club_app` is a Flutter application designed to manage and interact with var
 - **Club Group Rooms:** `/home/club/:clubId/groups/:groupId/rooms`
 - **Club Group Room Chat:** `/home/club/:clubId/groups/:groupId/chat/:roomId`
 
-### Chats and Related Features
+### Chats and Related Features المحادثات وملحقاتها
 - **Chats:** `/home/chats` (Types: individual, group, support, closed)
 - **Chat Details:** `/home/chats/:chatId`
 
-### Tasks and Related Features
+### Tasks and Related Features المهام وملحقاتها
 - **Tasks:** `/home/tasks`
 - **Task Details:** `/home/tasks/:taskId`
 
-### News and Related Features
+### News and Related Features الاخبار وملحقاتها
 - **News:** `/home/news`
 - **News Details:** `/home/news/:newsId`
 
-### Activities and Related Features
+### Activities and Related Features الانشطة وملحقاتها
 - **Activities:** `/home/activities`
 - **Activity Details:** `/home/activities/:activityId`
 
-### Calendar and Related Features
+### Calendar and Related Features التقويم وملحقاتها
 - **Calendar:** `/home/calendar`
 - **Calendar Event Details:** `/home/calendar/:eventId`
 - **Calendar Date:** `/home/calendar/:date`
